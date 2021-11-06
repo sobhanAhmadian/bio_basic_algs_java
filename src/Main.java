@@ -8,8 +8,8 @@ public class Main {
         String genome = "";
         String ori = "";
         try {
-            scanner = new Scanner(new File("src/VibrioGenom.txt"));
-            genome = scanner.next();
+            scanner = new Scanner(new File("src/EcoliGenome.txt"));
+            genome = scanner.next().toLowerCase();
             scanner = new Scanner(new File("src/VibrioOri.txt"));
             ori = scanner.next();
         } catch (FileNotFoundException e) {
@@ -38,6 +38,35 @@ public class Main {
             System.out.println();
         }
         System.out.println();
+        System.out.println("cttgatcat and " + reverseComplement("cttgatcat") + " are complementary");
+        System.out.println();
+        System.out.println("cttgatcat positions in genome : " + getPatternPositions(genome, "cttgatcat"));
+        System.out.println("atgatcaag positions in genome : " + getPatternPositions(genome, "atgatcaag"));
+
+
+        System.out.println("\n<<<<<<<<<< Clumps >>>>>>>>>>");
+        String sequenceForClumpFinding = genome.substring(0, 200);
+        for (String word :
+                findClump(sequenceForClumpFinding, 9, 500, 3)) {
+            System.out.printf("%s ", word);
+        }
+
+        System.out.println("\n<<<<<<<<<< Skew >>>>>>>>>>");
+        String skewSequence = genome;
+        int[] skew = giveAllSkew(skewSequence);
+        for (Integer i :
+                Util.getAllMinIndexes(skew)) {
+            System.out.printf("%d ", i);
+        }
+    }
+
+    private static StringBuilder getPatternPositions(String sequence, String pattern) {
+        StringBuilder list = new StringBuilder();
+        for (int i :
+                findPatterPositionsInGenome(sequence, pattern)) {
+            list.append(i).append(" ");
+        }
+        return list;
     }
 
     public static int patterCount(String sequence, String pattern) {
@@ -52,6 +81,18 @@ public class Main {
             }
         }
         return counter;
+    }
+
+    public static List<Integer> findPatterPositionsInGenome(String sequence, String pattern) {
+        List<Integer> positions = new ArrayList<>();
+        char startChar = pattern.charAt(0);
+        for (int i = 0; i <= sequence.length() - pattern.length(); i++) {
+            if (sequence.charAt(i) == startChar) {
+                if (sequence.startsWith(pattern, i))
+                    positions.add(i);
+            }
+        }
+        return positions;
     }
 
     public static Pair<List<String>, Integer> findMostFrequentWordsAlg1(String sequence, int k) {
@@ -72,6 +113,15 @@ public class Main {
 
     public static Pair<List<String>, Integer> findMostFrequentWordsAlg2(String sequence, int k) {
         List<String> patterns = new ArrayList<>();
+        Map<String, Integer> freq = frequencyTable(sequence, k);
+        int max = Util.getMax(freq.values());
+        freq.forEach((s, integer) -> {
+            if (integer == max) patterns.add(s);
+        });
+        return new Pair<>(patterns, max);
+    }
+
+    private static Map<String, Integer> frequencyTable(String sequence, int k) {
         Map<String, Integer> freq = new HashMap<>();
         int n = sequence.length() - k + 1;
         for (int i = 0; i < n; i++) {
@@ -81,11 +131,7 @@ public class Main {
             else
                 freq.put(pattern, 1);
         }
-        int max = Util.getMax(freq.values());
-        freq.forEach((s, integer) -> {
-            if (integer == max) patterns.add(s);
-        });
-        return new Pair<>(patterns, max);
+        return freq;
     }
 
     public static String reverseComplement(String dnaSeq) {
@@ -117,5 +163,34 @@ public class Main {
             default:
                 return 'n';
         }
+    }
+
+    public static List<String> findClump(String sequence, int k, int l, int t) {
+        List<String> patterns = new ArrayList<>();
+        int n = sequence.length() - l + 1;
+        for (int i = 0; i < n; i++) {
+            String window = sequence.substring(i, i + l);
+            Map<String, Integer> freq = frequencyTable(window, k);
+            for (int j = 0; j < freq.size(); j++) {
+                freq.forEach((s, integer) -> {
+                    if (integer >= t)
+                        patterns.add(s);
+                });
+            }
+        }
+        Util.removeDuplicates(patterns);
+        return patterns;
+    }
+
+    public static int[] giveAllSkew(String sequence) {
+        sequence = sequence.toLowerCase();
+        int[] skew = new int[sequence.length() + 1];
+        skew[0] = 0;
+        for (int i = 1; i < sequence.length() + 1; i++) {
+            if (sequence.charAt(i - 1) == 'g') skew[i] = skew[i - 1] + 1;
+            else if (sequence.charAt(i - 1) == 'c') skew[i] = skew[i - 1] - 1;
+            else skew[i] = skew[i - 1];
+        }
+        return skew;
     }
 }
