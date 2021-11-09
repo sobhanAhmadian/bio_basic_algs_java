@@ -45,9 +45,9 @@ public class Main {
 
 
         System.out.println("\n<<<<<<<<<< Clumps >>>>>>>>>>");
-        String sequenceForClumpFinding = genome.substring(0, 200);
+        String sequenceForClumpFinding = genome.substring(3923620, 3924120);
         for (String word :
-                findClump(sequenceForClumpFinding, 9, 500, 3)) {
+                findClump(sequenceForClumpFinding, 9, 500, 2)) {
             System.out.printf("%s ", word);
         }
 
@@ -58,18 +58,28 @@ public class Main {
                 Util.getAllMinIndexes(skew)) {
             System.out.printf("%d ", i);
         }
+
+        System.out.println("\n<<<<<<<<<< Approximate Pattern Count >>>>>>>>>>");
+        String aSequence = "ACTCCTGCGTTGTAGCCGTCGTCAGTGTCGCGTGTTTTAAGTAATCCACGCATGCCGAGCATACGTGGATAGTATACACTGCGTCTATCCCAGCGCACGGTGTGACACATTAAAACTTCACGGATTCTCTGATCTTGGGGTATATGTTCGTATACAAGTTGAAGATAATCGTTGGTCTAAGCTCAGATGTCCGGAAAGATTATTGAGCTGTGGAGTTTGCCACGTCTCATGGGCTCAGCTCGCCTGGTCTAAAACACTAACAACTAAGCGCAGTTTCTCGTAGGGGCTGCTCTCACGTGGATTGGTAGCTTATGGAAGGTCCGCACTCATCTTCATTGAGACATAAATAGTCCGATTC";
+        String aPattern = "TTTTAAG";
+        int d = 2;
+        System.out.println(aPattern + " : " + approximatePatternCount(aSequence, aPattern, d));
+        for (Integer i :
+                findApproximatePatternPositionsInGenome(aSequence, aPattern, d)) {
+            System.out.printf("%d ", i);
+        }
     }
 
     private static StringBuilder getPatternPositions(String sequence, String pattern) {
         StringBuilder list = new StringBuilder();
         for (int i :
-                findPatterPositionsInGenome(sequence, pattern)) {
+                findPatternPositionsInGenome(sequence, pattern)) {
             list.append(i).append(" ");
         }
         return list;
     }
 
-    public static int patterCount(String sequence, String pattern) {
+    public static int patternCount(String sequence, String pattern) {
         sequence = sequence.toLowerCase();
         pattern = pattern.toLowerCase();
         int counter = 0;
@@ -83,7 +93,19 @@ public class Main {
         return counter;
     }
 
-    public static List<Integer> findPatterPositionsInGenome(String sequence, String pattern) {
+    public static int approximatePatternCount(String sequence, String pattern, int d) {
+        sequence = sequence.toLowerCase();
+        pattern = pattern.toLowerCase();
+        int counter = 0;
+        char startChar = pattern.charAt(0);
+        for (int i = 0; i <= sequence.length() - pattern.length(); i++) {
+            if (hammingDistance(pattern, sequence.substring(i, i + pattern.length())) <= d)
+                counter++;
+        }
+        return counter;
+    }
+
+    public static List<Integer> findPatternPositionsInGenome(String sequence, String pattern) {
         List<Integer> positions = new ArrayList<>();
         char startChar = pattern.charAt(0);
         for (int i = 0; i <= sequence.length() - pattern.length(); i++) {
@@ -95,12 +117,22 @@ public class Main {
         return positions;
     }
 
+    public static List<Integer> findApproximatePatternPositionsInGenome(String sequence, String pattern, int d) {
+        List<Integer> positions = new ArrayList<>();
+        char startChar = pattern.charAt(0);
+        for (int i = 0; i <= sequence.length() - pattern.length(); i++) {
+            if (hammingDistance(pattern, sequence.substring(i, i + pattern.length())) <= d)
+                positions.add(i);
+        }
+        return positions;
+    }
+
     public static Pair<List<String>, Integer> findMostFrequentWordsAlg1(String sequence, int k) {
         List<String> patterns = new ArrayList<>();
         int n = sequence.length() - k + 1;
         int[] counts = new int[n];
         for (int i = 0; i < n; i++) {
-            counts[i] = patterCount(sequence, sequence.substring(i, i + k));
+            counts[i] = patternCount(sequence, sequence.substring(i, i + k));
         }
         int max = Util.getMax(counts);
         for (int i = 0; i < n; i++) {
@@ -121,6 +153,19 @@ public class Main {
         return new Pair<>(patterns, max);
     }
 
+    /**
+     * find most frequent word with mismatch and reverse complement
+     **/
+    public static Pair<List<String>, Integer> findMFW(String sequence, int k, int d) {
+        List<String> patterns = new ArrayList<>();
+        Map<String, Integer> freq = approximateFrequencyTable(sequence, k, d);
+        int max = Util.getMax(freq.values());
+        freq.forEach((s, integer) -> {
+            if (integer == max) patterns.add(s);
+        });
+        return new Pair<>(patterns, max);
+    }
+
     private static Map<String, Integer> frequencyTable(String sequence, int k) {
         Map<String, Integer> freq = new HashMap<>();
         int n = sequence.length() - k + 1;
@@ -132,6 +177,81 @@ public class Main {
                 freq.put(pattern, 1);
         }
         return freq;
+    }
+
+    private static Map<String, Integer> approximateFrequencyTable(String sequence, int k, int d) {
+        Map<String, Integer> freq = new HashMap<>();
+        int n = sequence.length() - k + 1;
+        for (int i = 0; i < n; i++) {
+            String pattern = sequence.substring(i, i + k);
+            for (String neighbor :
+                    neighborhood(pattern, d)) {
+                if (freq.containsKey(neighbor))
+                    freq.replace(neighbor, freq.get(neighbor) + 1);
+                else
+                    freq.put(neighbor, 1);
+
+                String rv = reverseComplement(neighbor);
+                if (freq.containsKey(rv))
+                    freq.replace(rv, freq.get(rv) + 1);
+                else
+                    freq.put(rv, 1);
+            }
+        }
+        return freq;
+    }
+
+    public static List<String> neighborhood(String sequence, int d) {
+        List<String> neighbours = new ArrayList<>(neighbors(sequence, d));
+        neighbours.add(sequence);
+        return neighbours;
+    }
+
+    public static List<String> neighbors(String sequence, int d) {
+        List<String> neighbours = new ArrayList<>();
+        if (d == 0) return neighbours;
+        neighbours.addAll(neighbors(sequence, d - 1));
+        neighbours.addAll(neighbors(sequence, 0, d));
+        return neighbours;
+    }
+
+    public static List<String> neighbors(String sequence, int start, int numberOfMutations) {
+        List<String> neighbors = new ArrayList<>();
+        if (numberOfMutations <= 0) {
+            neighbors.add(sequence);
+            return neighbors;
+        } else if (start == sequence.length() - numberOfMutations + 1) {
+            return neighbors;
+        }
+
+        neighbors.addAll(neighbors(sequence, start + 1, numberOfMutations));
+
+        List<Character> list = new ArrayList<>();
+        list.add('A');
+        list.add('T');
+        list.add('C');
+        list.add('G');
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i) == sequence.charAt(start))
+                list.remove(i);
+        }
+
+        List<String> temp = new ArrayList<>();
+        for (char c :
+                list) {
+            temp.add(replace(sequence, start, c));
+        }
+        for (String n :
+                temp) {
+            neighbors.addAll(neighbors(n, start + 1, numberOfMutations - 1));
+        }
+        return neighbors;
+    }
+
+    public static String replace(String sequence, int position, char c) {
+        if (position == sequence.length() - 1)
+            return sequence.substring(0, position) + c;
+        return sequence.substring(0, position) + c + sequence.substring(position + 1);
     }
 
     public static String reverseComplement(String dnaSeq) {
@@ -192,5 +312,15 @@ public class Main {
             else skew[i] = skew[i - 1];
         }
         return skew;
+    }
+
+    public static int hammingDistance(String p, String q) {
+        if (p.length() != q.length()) throw new IllegalArgumentException("p and q should have same length");
+
+        int distance = 0;
+        for (int i = 0; i < p.length(); i++) {
+            if (p.charAt(i) != q.charAt(i)) distance++;
+        }
+        return distance;
     }
 }
