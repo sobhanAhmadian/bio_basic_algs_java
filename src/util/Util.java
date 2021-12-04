@@ -1,8 +1,13 @@
+package util;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class Util {
+public final class Util {
+
+    private Util() {
+    }
 
     public static int getMax(int[] array) {
         int max = Integer.MIN_VALUE;

@@ -1,3 +1,5 @@
+package dataStructures;
+
 public class Pair<T, E> {
     T t;
     E e;
