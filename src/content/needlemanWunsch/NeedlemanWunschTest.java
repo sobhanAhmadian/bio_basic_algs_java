@@ -18,16 +18,11 @@ class NeedlemanWunschTest {
 
     @BeforeEach
     void setUp() {
-        List<Character> list1 = new ArrayList<>();
-        List<Character> list2 = new ArrayList<>();
-        list1.add('A');
-        list2.add('A');
-        list1.add('T');
-        list2.add('T');
-        list1.add('C');
-        list2.add('C');
-        list1.add('G');
-        list2.add('G');
+        List<Character> characters = new ArrayList<>();
+        characters.add('A');
+        characters.add('T');
+        characters.add('C');
+        characters.add('G');
         double[][] scores = new double[4][4];
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
@@ -35,7 +30,7 @@ class NeedlemanWunschTest {
                 else scores[i][j] = -1;
             }
         }
-        score = new Score(list1, list2, scores);
+        score = new Score(characters, scores);
 
         x = "GATTACA";
         y = "GCATGCG";

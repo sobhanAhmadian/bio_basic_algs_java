@@ -7,6 +7,15 @@ public final class NeedlemanWunsch {
     private NeedlemanWunsch() {
     }
 
+    /**
+     *
+     * @param x first sequence
+     * @param y second sequence
+     * @param d penalty for gap
+     * @param score table of matching elements' scores
+     * @return a pair. the first element is value of dynamic programming table. the second
+     * is table of parents which shows parent of each node.
+     */
     public static Pair<double[][], char[][]> align(String x, String y, double d, Score score) {
         int m = x.length() + 1;
         int n = y.length() + 1;
@@ -56,6 +65,13 @@ public final class NeedlemanWunsch {
         }
     }
 
+    /**
+     *
+     * @param x first sequence
+     * @param y second sequence
+     * @param b table of parents
+     * @return pair of aligned sequences
+     */
     public static Pair<String, String> print(String x, String y, char[][] b) {
         StringBuilder ax = new StringBuilder();
         StringBuilder ay = new StringBuilder();
