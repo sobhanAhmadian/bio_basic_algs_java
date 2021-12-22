@@ -29,40 +29,7 @@ public final class MostFrequentWord {
             e.printStackTrace();
         }
 
-        System.out.println("<<<<<<<<<< DATASET INFORMATION >>>>>>>>>>");
-        System.out.println("Genome Length: " + genome.length());
-        System.out.println("Ori Length :" + ori.length());
-        int[] numbers = new int[30];
-        for (int i = 0; i < ori.length(); i++) {
-            numbers[((int) ori.charAt(i)) - 97] += 1;
-        }
-        System.out.println("a : " + numbers[0] + "\nc : " + numbers[2] + "\ng : " + numbers[6] + "\nt : " + numbers[19]);
-        System.out.println("a + t : " + (numbers[0] + numbers[19]));
-        System.out.println("c + g : " + (numbers[2] + numbers[6]));
-        System.out.println("<<<<<<<<<< END >>>>>>>>>>");
 
-        System.out.println("\nk : count : ");
-        for (int i = 3; i < 10; i++) {
-            System.out.printf("%d : %5d : ", i, findMFW(ori, i).getE());
-            for (String word :
-                    findMFW(ori, i).getT()) {
-                System.out.printf("%9s%s", word, " | ");
-            }
-            System.out.println();
-        }
-        System.out.println();
-        System.out.println("cttgatcat and " + SequenceUtility.reverseComplement("cttgatcat") + " are complementary");
-        System.out.println();
-        System.out.println("cttgatcat positions in genome : " + SequenceUtility.getPatternPositions(genome, "cttgatcat", 0, false));
-        System.out.println("atgatcaag positions in genome : " + SequenceUtility.getPatternPositions(genome, "atgatcaag", 0, false));
-
-
-        System.out.println("\n<<<<<<<<<< Clumps >>>>>>>>>>");
-        String sequenceForClumpFinding = genome.substring(3923620, 3924120);
-        for (String word :
-                ClumpFinding.findClump(sequenceForClumpFinding, 9, 500, 2)) {
-            System.out.printf("%s ", word);
-        }
 
         System.out.println("\n<<<<<<<<<< Skew >>>>>>>>>>");
         String skewSequence = genome;
