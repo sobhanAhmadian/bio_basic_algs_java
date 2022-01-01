@@ -16,40 +16,6 @@ public final class MostFrequentWord {
 
     }
 
-    public static void hi() {
-        Scanner scanner;
-        String genome = "";
-        String ori = "";
-        try {
-            scanner = new Scanner(new File("src/res/EcoliGenome.txt"));
-            genome = scanner.next().toLowerCase();
-            scanner = new Scanner(new File("src/res/VibrioOri.txt"));
-            ori = scanner.next();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-
-
-        System.out.println("\n<<<<<<<<<< Skew >>>>>>>>>>");
-        String skewSequence = genome;
-        int[] skew = MinimumSkew.getAllSkew(skewSequence);
-        for (Integer i :
-                Util.getAllMinIndexes(skew)) {
-            System.out.printf("%d ", i);
-        }
-
-        System.out.println("\n<<<<<<<<<< Approximate Pattern Count >>>>>>>>>>");
-        String aSequence = "ACTCCTGCGTTGTAGCCGTCGTCAGTGTCGCGTGTTTTAAGTAATCCACGCATGCCGAGCATACGTGGATAGTATACACTGCGTCTATCCCAGCGCACGGTGTGACACATTAAAACTTCACGGATTCTCTGATCTTGGGGTATATGTTCGTATACAAGTTGAAGATAATCGTTGGTCTAAGCTCAGATGTCCGGAAAGATTATTGAGCTGTGGAGTTTGCCACGTCTCATGGGCTCAGCTCGCCTGGTCTAAAACACTAACAACTAAGCGCAGTTTCTCGTAGGGGCTGCTCTCACGTGGATTGGTAGCTTATGGAAGGTCCGCACTCATCTTCATTGAGACATAAATAGTCCGATTC";
-        String aPattern = "TTTTAAG";
-        int d = 2;
-        System.out.println(aPattern + " : " + SequenceUtility.patternCount(aSequence, aPattern, d, false));
-        for (Integer i :
-                SequenceUtility.getPatternPositions(aSequence, aPattern, d, false)) {
-            System.out.printf("%d ", i);
-        }
-    }
-
     /**
      * find most frequent words without mismatch and reverse complement
      *
