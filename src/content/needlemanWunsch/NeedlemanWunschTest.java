@@ -32,8 +32,8 @@ class NeedlemanWunschTest {
         }
         score = new Score(characters, scores);
 
-        x = "GATTACA";
-        y = "GCATGCG";
+        x = "GTCGTTCTT";
+        y = "ATCGAATTTT";
     }
 
     @Test
