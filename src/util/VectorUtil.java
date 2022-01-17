@@ -5,6 +5,12 @@ public class VectorUtil {
     private VectorUtil() {
     }
 
+    /**
+     * calculating cosign similarity between two vectors
+     * @param x a vector
+     * @param y a vector
+     * @return cosign similarity between x and y
+     */
     public static double cosignSimilarity(double[] x, double[] y) {
         double xSize = 0;
         for (Double a :
