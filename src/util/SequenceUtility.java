@@ -161,4 +161,26 @@ public final class SequenceUtility {
         }
         return freq;
     }
+
+    /**
+     * @param sequence the sequence in witch we want to find k-mers
+     * @param k        the length of k-mers
+     * @param d        most possible mutations witch is accepted in k-mer
+     * @param w        indicates that should count reverse complement of k-mers or not
+     * @return a list from k-mers exist in sequence with at most d mutations and reverse complement
+     */
+    public static List<String> getAllPatterns(String sequence, int k, int d, boolean w) {
+        List<String> patterns = new ArrayList<>();
+        int n = sequence.length() - k + 1;
+        for (int i = 0; i < n; i++) {
+            String pattern = sequence.substring(i, i + k);
+            for (String neighbor :
+                    SequenceUtility.neighborhood(pattern, d)) {
+                if (!patterns.contains(neighbor)) patterns.add(neighbor);
+                if (w) if (!patterns.contains(reverseComplement(neighbor)))
+                    patterns.add(reverseComplement(neighbor));
+            }
+        }
+        return patterns;
+    }
 }
