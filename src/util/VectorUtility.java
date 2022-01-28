@@ -1,8 +1,8 @@
 package util;
 
-public class VectorUtil {
+public class VectorUtility {
 
-    private VectorUtil() {
+    private VectorUtility() {
     }
 
     /**

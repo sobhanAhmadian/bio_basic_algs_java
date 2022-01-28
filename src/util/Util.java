@@ -18,6 +18,15 @@ public final class Util {
         return max;
     }
 
+    public static double getMax(double[] array) {
+        double max = Integer.MIN_VALUE;
+        for (double element : array) {
+            if (element >= max)
+                max = element;
+        }
+        return max;
+    }
+
     public static int getMax(Collection<Integer> array) {
         int max = Integer.MIN_VALUE;
         for (int element : array) {
