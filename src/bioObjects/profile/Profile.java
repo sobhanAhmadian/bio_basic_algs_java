@@ -1,6 +1,7 @@
 package bioObjects.profile;
 
 import util.SequenceUtility;
+import util.Util;
 
 import java.util.Arrays;
 import java.util.List;
@@ -74,5 +75,23 @@ public class Profile {
             distance += SequenceUtility.hammingDistance(consensus, sequence);
         }
         return distance;
+    }
+
+    public String getConsensus() {
+        StringBuilder consensus = new StringBuilder();
+        for (int i = 0; i < k; i++) {
+            double[] array = new double[t];
+            for (int j = 0; j < t; j++) {
+                array[j] = profile[j][i];
+            }
+            double max = Util.getMax(array);
+            for (int j = 0; j < t; j++) {
+                if (profile[j][i] == max) {
+                    consensus.append(elements.get(j));
+                    break;
+                }
+            }
+        }
+        return consensus.toString();
     }
 }
