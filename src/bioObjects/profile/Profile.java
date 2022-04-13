@@ -7,11 +7,19 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Profile {
-    private final List<String> sequences;
+    private List<String> sequences;
     private final List<Character> elements;
     private final double[][] profile;
     private final int t;
     private final int k;
+
+    /**
+     * @param elements line nucleotides or amino acids
+     * @param sequences sequences with that you want to make profile
+     */
+    public Profile(Character[] elements, String[] sequences) {
+        this(elements, Arrays.asList(sequences));
+    }
 
     /**
      * @param elements line nucleotides or amino acids
@@ -30,8 +38,18 @@ public class Profile {
     }
 
     /**
+     * @param elements line nucleotides or amino acids
+     * @param profile matrix of probabilities
+     */
+    public Profile(Character[] elements, double[][] profile) {
+        this.elements = Arrays.asList(elements);
+        this.profile = profile;
+        this.k = profile[0].length;
+        this.t = profile.length;
+    }
+
+    /**
      * this method fills the matrix
-     * @param sequences sequences that you want to make profile with
      */
     private void makeProfile() {
         for (int i = 0; i < k; i++) {
@@ -93,5 +111,19 @@ public class Profile {
             }
         }
         return consensus.toString();
+    }
+
+    public double probabilityOf(String sequence) {
+        if (sequence.length() != k) throw new IllegalArgumentException("sequence length should be equal to profile length");
+        double p = 1;
+        for (int i = 0; i < k; i++) {
+            char c = sequence.charAt(i);
+            p *= profile[elements.indexOf(c)][i];
+        }
+        return p;
+    }
+
+    public int getK() {
+        return k;
     }
 }
