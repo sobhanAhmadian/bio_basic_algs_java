@@ -1,4 +1,4 @@
-package content.motifFinding.medianStringBruteForce;
+package content.motifFinding.medianString;
 
 import bioObjects.profile.Profile;
 import res.Sequences;

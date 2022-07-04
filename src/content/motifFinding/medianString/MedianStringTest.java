@@ -1,6 +1,5 @@
-package content.motifFinding.medianStringBruteForce;
+package content.motifFinding.medianString;
 
-import bioObjects.profile.Profile;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,7 +9,7 @@ import java.util.List;
 class MedianStringTest {
 
     List<String> sequences;
-    int k = 6;
+    int k = 7;
 
     @BeforeEach
     void setUp() {
@@ -25,6 +24,11 @@ class MedianStringTest {
                 "ACTGAATAGGCATCCCAAAGCAAGATGGGTTGCTCACATAAT\n" +
                 "TTACCTTGACAGACTCGGCAAAATCGTTGTGCTGCATTTTCG\n" +
                 "CTAGGGAGCCTAGTGTAGCGGTCCTGCCACTGTTAGCAAAAT";
+        sequences.addAll(List.of(data.split("\n")));
+
+        data = "CTCGATGAGTAGGAAAGTAGTTTCACTGGGCGAACCACCCCGGCGCTAATCCTAGTGCCC\n" +
+                "GCAATCCTACCCGAGGCCACATATCAGTAGGAACTAGAACCACCACGGGTGGCTAGTTTC\n" +
+                "GGTGTTGAACCACGGGGTTAGTTTCATCTATTGTAGGAATCGGCTTCAAATCCTACACAG";
         sequences.addAll(List.of(data.split("\n")));
     }
 
