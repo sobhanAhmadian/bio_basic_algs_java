@@ -1,7 +1,7 @@
-package bioObjects.profile;
+package dataStructures.profile;
 
 import org.junit.jupiter.api.Test;
-import res.Sequences;
+import data.Sequences;
 
 class ProfileTest {
 

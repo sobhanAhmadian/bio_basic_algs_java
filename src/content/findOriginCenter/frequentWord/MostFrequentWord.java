@@ -1,13 +1,9 @@
-package content.frequentWord;
+package content.findOriginCenter.frequentWord;
 
-import content.clumpFinding.ClumpFinding;
-import content.minimumSkew.MinimumSkew;
-import util.SequenceUtility;
+import util.DnaSequenceUtility;
 import util.Util;
 import dataStructures.Pair;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.*;
 
 public final class MostFrequentWord {
@@ -41,7 +37,7 @@ public final class MostFrequentWord {
      */
     public static Pair<List<String>, Integer> findMFW(String sequence, int k, int d, boolean withReverse) {
         List<String> patterns = new ArrayList<>();
-        Map<String, Integer> freq = SequenceUtility.frequencyTable(sequence, k, d, withReverse);
+        Map<String, Integer> freq = DnaSequenceUtility.frequencyTable(sequence, k, d, withReverse);
         int max = Util.getMax(freq.values());
         freq.forEach((s, integer) -> {
             if (integer == max) patterns.add(s);

@@ -1,4 +1,4 @@
-package content.nussinovRnaFolding;
+package content.sequenceAlignment.nussinovRnaFolding;
 
 import dataStructures.Pair;
 import util.Util;

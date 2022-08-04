@@ -1,4 +1,4 @@
-package content.minimumSkew;
+package content.findOriginCenter.minimumSkew;
 
 public class MinimumSkew {
 

@@ -1,6 +1,6 @@
 package content.motifFinding.bruteForce;
 
-import util.SequenceUtility;
+import util.DnaSequenceUtility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,13 +17,13 @@ public class BruteForceMotifFinding {
      */
     public static List<String> motifEnumeration(List<String> sequences, int k, int d) {
         List<String> motifs = new ArrayList<>();
-        List<String> patternsInFirstDna = SequenceUtility.getAllPatterns(sequences.get(0), k, d, false);
+        List<String> patternsInFirstDna = DnaSequenceUtility.getAllPatterns(sequences.get(0), k, d, false);
         for (String pattern :
                 patternsInFirstDna) {
             boolean all = true;
             for (String s :
                     sequences) {
-                if (SequenceUtility.patternCount(s, pattern, d, false) <= 0) all = false;
+                if (DnaSequenceUtility.patternCount(s, pattern, d, false) <= 0) all = false;
             }
             if (all) motifs.add(pattern);
         }

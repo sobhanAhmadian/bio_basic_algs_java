@@ -1,5 +1,8 @@
 package content.motifFinding.medianString;
 
+import content.motifFinding.MotifFinder;
+import data.Sequences;
+import dataStructures.profile.Profile;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,9 +13,11 @@ class MedianStringTest {
 
     List<String> sequences;
     int k = 7;
+    MotifFinder motifFinder;
 
     @BeforeEach
     void setUp() {
+        motifFinder = new MedianString();
         sequences = new ArrayList<>();
         String data = "GCAATCGTGCCTGGATAACAAAATCTCTGTCCTCCGAAGATC\n" +
                 "CATAATCGAGGCGATACGGTGAACGGCTACTTTGTATACCTT\n" +
@@ -24,7 +29,7 @@ class MedianStringTest {
                 "ACTGAATAGGCATCCCAAAGCAAGATGGGTTGCTCACATAAT\n" +
                 "TTACCTTGACAGACTCGGCAAAATCGTTGTGCTGCATTTTCG\n" +
                 "CTAGGGAGCCTAGTGTAGCGGTCCTGCCACTGTTAGCAAAAT";
-        sequences.addAll(List.of(data.split("\n")));
+//        sequences.addAll(List.of(data.split("\n")));
 
         data = "CTCGATGAGTAGGAAAGTAGTTTCACTGGGCGAACCACCCCGGCGCTAATCCTAGTGCCC\n" +
                 "GCAATCCTACCCGAGGCCACATATCAGTAGGAACTAGAACCACCACGGGTGGCTAGTTTC\n" +
@@ -34,7 +39,7 @@ class MedianStringTest {
 
     @Test
     void findMotif() {
-        String medianString = MedianString.findMedianString(sequences, k);
-        System.out.println(medianString);
+        List<String> motif = motifFinder.findMotif(sequences, k);
+        System.out.println(new Profile(Sequences.NUCLEOTIDES, motif).getConsensus());
     }
 }

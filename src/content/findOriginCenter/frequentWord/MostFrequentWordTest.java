@@ -1,14 +1,12 @@
-package content.frequentWord;
+package content.findOriginCenter.frequentWord;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import util.SequenceUtility;
+import util.DnaSequenceUtility;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class MostFrequentWordTest {
 
@@ -41,10 +39,10 @@ class MostFrequentWordTest {
         }
         System.out.println();
         System.out.println("cttgatcat and " +
-                SequenceUtility.reverseComplement("cttgatcat") + " are complementary");
+                DnaSequenceUtility.reverseComplement("cttgatcat") + " are complementary");
         System.out.println("cttgatcat positions in genome :\n" +
-                SequenceUtility.getPatternPositions(genome, "cttgatcat", 0, false));
+                DnaSequenceUtility.getPatternPositions(genome, "cttgatcat", 0, false));
         System.out.println("atgatcaag positions in genome :\n" +
-                SequenceUtility.getPatternPositions(genome, "atgatcaag", 0, false));
+                DnaSequenceUtility.getPatternPositions(genome, "atgatcaag", 0, false));
     }
 }

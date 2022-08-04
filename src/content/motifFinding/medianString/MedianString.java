@@ -1,44 +1,25 @@
 package content.motifFinding.medianString;
 
-import bioObjects.profile.Profile;
-import res.Sequences;
-import util.SequenceUtility;
+import content.motifFinding.MotifFinder;
+import data.Sequences;
+import dataStructures.profile.Profile;
+import util.DnaSequenceUtility;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MedianString {
+public class MedianString implements MotifFinder {
 
-    private MedianString() {}
-
-    public static String findMedianString(List<String> sequences, int k) {
-        StringBuilder base = new StringBuilder();
-        base.append("A".repeat(Math.max(0, k)));
-        List<String> patterns = SequenceUtility.neighborhood(base.toString(), k);
-
-        String bestPattern = base.toString();
-        Profile bestProfile = findMedianString(sequences, k, bestPattern);
-        for (String pattern :
-                patterns) {
-            Profile profile = findMedianString(sequences, k, pattern);
-            if (profile.getHammingDistance(pattern) < bestProfile.getHammingDistance(bestPattern)) {
-                bestPattern = pattern;
-                bestProfile = profile;
-            }
-        }
-        return bestPattern;
-    }
-
-    private static Profile findMedianString(List<String> sequences, int k, String consensus) {
+    private List<String> findBestMotif(List<String> sequences, int k, String consensus) {
         List<String> patterns = new ArrayList<>();
         for (String sequence :
                 sequences) {
             String bestPattern = sequence.substring(0, k);
-            int bestScore = SequenceUtility.hammingDistance(consensus, bestPattern);
+            int bestScore = DnaSequenceUtility.hammingDistance(consensus, bestPattern);
             int n = sequence.length() - k + 1;
             for (int i = 0; i < n; i++) {
                 String pattern = sequence.substring(i, i + k);
-                int score = SequenceUtility.hammingDistance(consensus, pattern);
+                int score = DnaSequenceUtility.hammingDistance(consensus, pattern);
                 if (score < bestScore) {
                     bestPattern = pattern;
                     bestScore = score;
@@ -47,6 +28,22 @@ public class MedianString {
             patterns.add(bestPattern);
         }
 
-        return new Profile(Sequences.NUCLEOTIDES, patterns);
+        return patterns;
+    }
+
+    @Override
+    public List<String> findMotif(List<String> sequences, int k) {
+        String bestPattern = "A".repeat(Math.max(0, k));
+        List<String> bestMotif = findBestMotif(sequences, k, bestPattern);
+        for (int i = 0; i < Math.pow(4, k); i++) {
+            String pattern = DnaSequenceUtility.numberToPattern(i, k);
+            List<String> motif = findBestMotif(sequences, k, pattern);
+
+            if (new Profile(Sequences.NUCLEOTIDES, motif).getHammingDistance(pattern) < new Profile(Sequences.NUCLEOTIDES, bestMotif).getHammingDistance(bestPattern)) {
+                bestPattern = pattern;
+                bestMotif = motif;
+            }
+        }
+        return bestMotif;
     }
 }

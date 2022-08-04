@@ -1,6 +1,6 @@
-package content.clumpFinding;
+package content.findOriginCenter.clumpFinding;
 
-import util.SequenceUtility;
+import util.DnaSequenceUtility;
 import util.Util;
 
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ public class ClumpFinding {
         int n = sequence.length() - l + 1;
         for (int i = 0; i < n; i++) {
             String frame = sequence.substring(i, i + l);
-            Map<String, Integer> freq = SequenceUtility.frequencyTable(frame, k, d, w);
+            Map<String, Integer> freq = DnaSequenceUtility.frequencyTable(frame, k, d, w);
             freq.forEach((s, integer) -> {
                 if (integer >= t)
                     patterns.add(s);

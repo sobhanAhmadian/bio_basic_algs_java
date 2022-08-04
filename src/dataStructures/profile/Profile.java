@@ -1,8 +1,9 @@
-package bioObjects.profile;
+package dataStructures.profile;
 
-import util.SequenceUtility;
+import util.DnaSequenceUtility;
 import util.Util;
 
+import javax.swing.*;
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,6 +13,32 @@ public class Profile {
     private final double[][] profile;
     private final int t;
     private final int k;
+
+
+    /**
+     * @param elements line nucleotides or amino acids
+     * @param sequences sequences with that you want to make profile
+     */
+    public Profile(Character[] elements, String[] sequences, boolean pseudoCount) {
+        this(elements, Arrays.asList(sequences), pseudoCount);
+    }
+
+    /**
+     * @param elements line nucleotides or amino acids
+     * @param sequences sequences with that you want to make profile
+     */
+    public Profile(Character[] elements, List<String> sequences, boolean pseudoCount) {
+        if (sequences.size() <= 0) throw new IllegalArgumentException("sequence list is empty");
+
+        this.t = elements.length;
+        this.k = sequences.get(0).length();
+        this.elements = Arrays.asList(elements);
+        this.sequences = sequences;
+        profile = new double[t][k];
+
+        if (pseudoCount) makeProfileWithPseudoCount();
+        else makeProfile();
+    }
 
     /**
      * @param elements line nucleotides or amino acids
@@ -65,6 +92,25 @@ public class Profile {
         }
     }
 
+
+    /**
+     * this method fills the matrix with pseudoCount
+     */
+    private void makeProfileWithPseudoCount() {
+        for (int i = 0; i < k; i++) {
+            for (String sequence :
+                    sequences) {
+                profile[elements.indexOf(sequence.charAt(i))][i]++;
+            }
+        }
+        for (int i = 0; i < t; i++) {
+            for (int j = 0; j < k; j++) {
+                profile[i][j]++;
+                profile[i][j] /= sequences.size();
+            }
+        }
+    }
+
     public void printProfile() {
         for (int i = 0; i < t; i++) {
             System.out.print(elements.get(i) + " : ");
@@ -90,7 +136,7 @@ public class Profile {
         double distance = 0;
         for (String sequence :
                 sequences) {
-            distance += SequenceUtility.hammingDistance(consensus, sequence);
+            distance += DnaSequenceUtility.hammingDistance(consensus, sequence);
         }
         return distance;
     }

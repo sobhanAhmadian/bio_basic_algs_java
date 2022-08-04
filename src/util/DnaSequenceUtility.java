@@ -5,9 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class SequenceUtility {
+public final class DnaSequenceUtility {
 
-    private SequenceUtility() {
+    private DnaSequenceUtility() {
     }
 
     public static int hammingDistance(String p, String q) {
@@ -98,10 +98,10 @@ public final class SequenceUtility {
         int counter = 0;
         for (int i = 0; i <= sequence.length() - pattern.length(); i++) {
             String frame = sequence.substring(i, i + pattern.length());
-            if (SequenceUtility.hammingDistance(pattern, frame) <= d)
+            if (DnaSequenceUtility.hammingDistance(pattern, frame) <= d)
                 counter++;
             if (reverseComplement)
-                if (SequenceUtility.hammingDistance(reverseComplement(pattern), frame) <= d)
+                if (DnaSequenceUtility.hammingDistance(reverseComplement(pattern), frame) <= d)
                     counter++;
         }
         return counter;
@@ -120,10 +120,10 @@ public final class SequenceUtility {
         List<Integer> positions = new ArrayList<>();
         for (int i = 0; i <= sequence.length() - pattern.length(); i++) {
             String frame = sequence.substring(i, i + pattern.length());
-            if (SequenceUtility.hammingDistance(pattern, frame) <= d)
+            if (DnaSequenceUtility.hammingDistance(pattern, frame) <= d)
                 positions.add(i);
             if (reverseComplement)
-                if (SequenceUtility.hammingDistance(SequenceUtility.reverseComplement(pattern), frame) <= d)
+                if (DnaSequenceUtility.hammingDistance(DnaSequenceUtility.reverseComplement(pattern), frame) <= d)
                     positions.add(i);
         }
         return positions;
@@ -144,14 +144,14 @@ public final class SequenceUtility {
         for (int i = 0; i < n; i++) {
             String pattern = sequence.substring(i, i + k);
             for (String neighbor :
-                    SequenceUtility.neighborhood(pattern, d)) {
+                    DnaSequenceUtility.neighborhood(pattern, d)) {
                 if (freq.containsKey(neighbor))
                     freq.replace(neighbor, freq.get(neighbor) + 1);
                 else
                     freq.put(neighbor, 1);
 
                 if (withReverse) {
-                    String rv = SequenceUtility.reverseComplement(neighbor);
+                    String rv = DnaSequenceUtility.reverseComplement(neighbor);
                     if (freq.containsKey(rv))
                         freq.replace(rv, freq.get(rv) + 1);
                     else
@@ -175,12 +175,67 @@ public final class SequenceUtility {
         for (int i = 0; i < n; i++) {
             String pattern = sequence.substring(i, i + k);
             for (String neighbor :
-                    SequenceUtility.neighborhood(pattern, d)) {
+                    DnaSequenceUtility.neighborhood(pattern, d)) {
                 if (!patterns.contains(neighbor)) patterns.add(neighbor);
                 if (w) if (!patterns.contains(reverseComplement(neighbor)))
                     patterns.add(reverseComplement(neighbor));
             }
         }
         return patterns;
+    }
+
+    /**
+     * @param pattern ith pattern in lexicographically ordered k-mers
+     * @return index of pattern in lexicographically ordered k-mers
+     */
+    public static int patternToNumber(String pattern) {
+        if (pattern.equals("")) return 0;
+        String symbol = String.valueOf(pattern.charAt(pattern.length() - 1));
+        String prefix = pattern.substring(0, pattern.length() - 1);
+        return 4 * patternToNumber(prefix) + symbolToNumber(symbol);
+    }
+
+    /**
+     * @param i index of pattern in lexicographically ordered k-mers
+     * @return ith pattern in lexicographically ordered k-mers
+     */
+    public static String numberToPattern(int i, int k) {
+        if (k == 1) return numberToSymbol(i);
+        int prefixIndex = i / 4;
+        int r = i % 4;
+        String symbol = numberToSymbol(r);
+        String prefix = numberToPattern(prefixIndex, k - 1);
+        return prefix + symbol;
+    }
+
+    private static int symbolToNumber(String symbol) {
+        switch (symbol) {
+            case "A":
+                return 0;
+            case "B":
+                return 1;
+            case "C":
+                return 2;
+            case "D":
+                return 3;
+            default:
+                throw new IllegalArgumentException("invalid symbol");
+        }
+    }
+
+    private static String numberToSymbol(int i) {
+        if (i > 3) throw new IllegalArgumentException("index of symbol is lower than four");
+        switch (i) {
+            case 0:
+                return "A";
+            case 1:
+                return "C";
+            case 2:
+                return "G";
+            case 3:
+                return "T";
+            default:
+                return null;
+        }
     }
 }
