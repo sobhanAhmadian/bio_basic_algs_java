@@ -40,7 +40,7 @@ class GreedySearchTest {
 
     @Test
     void getMostProbable() {
-        String mostProbable = ((GreedySearch) motifFinder).getMostProbable(profile, sequence);
+        String mostProbable = profile.getMostProbable(sequence);
         System.out.println(mostProbable);
     }
 

@@ -25,11 +25,10 @@ public class GreedySearch implements MotifFinder {
         for (String pattern :
                 patternsInFirstDna) {
             motif[0] = pattern;
-            for (int i = 1; i < t; i++)
-                motif[i] = getMostProbable(
-                        new Profile(Sequences.NUCLEOTIDES, Arrays.copyOfRange(motif, 0, i), true),
-                        sequences.get(i)
-                );
+            for (int i = 1; i < t; i++) {
+                Profile preProfile = new Profile(Sequences.NUCLEOTIDES, Arrays.copyOfRange(motif, 0, i), true);
+                motif[i] = preProfile.getMostProbable(sequences.get(i));
+            }
             Profile bestProfile = new Profile(Sequences.NUCLEOTIDES, bestMotif);
             Profile newProfile = new Profile(Sequences.NUCLEOTIDES, motif);
             if (newProfile.getHammingDistance(newProfile.getConsensus()) <
@@ -38,20 +37,5 @@ public class GreedySearch implements MotifFinder {
                 bestMotif = Arrays.copyOf(motif, motif.length);
         }
         return List.of(bestMotif);
-    }
-
-    public String getMostProbable(Profile profile, String sequence) {
-        if (sequence.length() < profile.getK()) throw new IllegalArgumentException();
-        String mostProbable = "";
-        double maxProb = -1;
-        int n = sequence.length() - profile.getK() + 1;
-        for (int i = 0; i < n; i++) {
-            String pattern = sequence.substring(i, i + profile.getK());
-            if (profile.probabilityOf(pattern) > maxProb) {
-                mostProbable = pattern;
-                maxProb = profile.probabilityOf(pattern);
-            }
-        }
-        return mostProbable;
     }
 }

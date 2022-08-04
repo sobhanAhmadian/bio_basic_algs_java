@@ -169,6 +169,21 @@ public class Profile {
         return p;
     }
 
+    public String getMostProbable(String sequence) {
+        if (sequence.length() < getK()) throw new IllegalArgumentException();
+        String mostProbable = "";
+        double maxProb = -1;
+        int n = sequence.length() - getK() + 1;
+        for (int i = 0; i < n; i++) {
+            String pattern = sequence.substring(i, i + getK());
+            if (probabilityOf(pattern) > maxProb) {
+                mostProbable = pattern;
+                maxProb = probabilityOf(pattern);
+            }
+        }
+        return mostProbable;
+    }
+
     public int getK() {
         return k;
     }
