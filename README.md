@@ -1,6 +1,4 @@
-# Java Implementation for some basic bioinformatic algorithms
-
-## Motif Finding
+# Motif Finding
 
 + Brute Force Algorithm
 + Gibbs Sampling
@@ -8,11 +6,11 @@
 + Median String
 + Randomized Motif Search
 
-## Sequence Alignment
+# Sequence Alignment
 
 + Needleman Wunsch Algorithm
 
-## Finding Origin of Replication
+# Finding Origin of Replication
 
 + Clump Finding
 + Frequent Words
