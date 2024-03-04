@@ -13,3 +13,7 @@
 + Needleman Wunsch Algorithm
 
 ## Finding Origin of Replication
+
++ Clump Finding
++ Frequent Words
++ Minimum Skew
